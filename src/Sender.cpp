@@ -6,7 +6,7 @@
 #include <WiFi.h>
 #include <esp_now.h>
 
-uint8_t receiverAddress[]={0x1C, 0xC3, 0xAB, 0xC4, 0x94, 0x68};  // Receiver MAC Address
+uint8_t receiverAddress[]={0x68, 0x09, 0x47, 0x48, 0x7C, 0x00};  // Receiver MAC Address
 const int ejectPin = 25; // Pin for the ejector mechanism
 
 
