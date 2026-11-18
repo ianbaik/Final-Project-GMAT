@@ -73,7 +73,7 @@ void setup() {
 
     // Set the ejector pin as output
     pinMode(ejectPin, OUTPUT);
-    digitalWrite(ejectPin, HIGH); 
+    digitalWrite(ejectPin, LOW); 
 
     // Initialize I2C communication 
     Wire.begin(21,22); 
