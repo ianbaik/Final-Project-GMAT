@@ -65,9 +65,16 @@ void loop(){
     Serial.print("/*");
     Serial.print(dataRocket.altitude, 2); Serial.print(",");
     Serial.print(dataRocket.temperature, 2); Serial.print(",");
-    // ... (Lanjutkan print variabel lainnya seperti kode asli Anda) ...
+    Serial.print(dataRocket.pressure, 4); Serial.print(","); 
+    Serial.print(dataRocket.orientationRoll, 2); Serial.print(",");
+    Serial.print(dataRocket.orientationPitch, 2); Serial.print(",");
+    Serial.print(dataRocket.orientationYaw, 2); Serial.print(",");
+    Serial.print(dataRocket.velocityZ, 2); Serial.print(",");
+    Serial.print(dataRocket.gyroX, 2); Serial.print(",");
+    Serial.print(dataRocket.gyroY, 2); Serial.print(",");
     Serial.print(dataRocket.gyroZ, 2);
-    Serial.println("*/");
+    Serial.print("*/");
+    Serial.println();
 
     newData = false; 
   } 

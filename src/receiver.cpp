@@ -28,10 +28,11 @@ Command_message incomingCmd;
 esp_now_peer_info_t peerInfo;
 
 bool newData=false; // Flag to indicate if new data has been received
+bool statusEjection=false; // Status ejection
 
 //fungction to handle incoming data
 void onDataReceived(const uint8_t *mac_addr, const uint8_t *data, int data_len) {
-    mempcpy(&dataRocket, data, sizeof(dataRocket)); // Copy the received data into the Struct_message struct
+    memcpy(&dataRocket, data, sizeof(dataRocket)); // Copy the received data into the Struct_message struct
     newData = true; // Set the flag to indicate new data has been received
 }
 
@@ -78,7 +79,9 @@ void loop() {
     Serial.print(dataRocket.gyroX, 2); Serial.print(",");
     Serial.print(dataRocket.gyroY, 2); Serial.print(",");
     Serial.print(dataRocket.gyroZ, 2);
-    Serial.println("*/");
+    Serial.print(statusEjection);
+    Serial.print("*/");
+    Serial.println();
 
     newData = false; 
   } 
@@ -90,6 +93,7 @@ void loop() {
     if(command.equalsIgnoreCase("eject")) {
       incomingCmd.ejectorCommand = true;
       esp_now_send(senderAddress, (uint8_t *)&incomingCmd, sizeof(incomingCmd));
+      statusEjection=true;
     }
   }
 }
