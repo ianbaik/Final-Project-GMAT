@@ -55,6 +55,7 @@ void onDataSent(const uint8_t *mac_addr, esp_now_send_status_t status);
 
 unsigned long timeNow = 0;
 bool triggerEject = false;
+unsigned long timeDelay=0;
 
 void setup() {
   Serial.begin(115200);
@@ -176,11 +177,12 @@ void loop() {
   if (triggerEject) {
     Serial.println("Ejector Active! Firing for 2 seconds...");
     digitalWrite(ejectPin, HIGH);
-    delay(2000); 
-    digitalWrite(ejectPin, LOW);
-    Serial.println("Ejector OFF");
-    triggerEject = false;
-    incomingCmd.ejectorCommand = false;
+     if(millis()-timeDelay>50000){
+       digitalWrite(ejectPin, LOW);
+       Serial.println("Ejector OFF");
+       triggerEject = false;
+       incomingCmd.ejectorCommand = false;
+    }
   }
 }
 
@@ -225,7 +227,7 @@ void calibrateSensors() {
   gyroOffsetZ = static_cast<float>(gyroZTotal) / calibrationSamples;
 
   // Calculate average Accel offsets
-  // Note: 2048.0 equals 1g at ±16g sensitivity. Move '- 2048.0' if X or Y points UP instead of Z.
+  //  2048.0 equals 1g at ±16g sensitivity. Move '- 2048.0' if X or Y points UP instead of Z.
   accelOffsetX = static_cast<float>(accelXTotal) / calibrationSamples;
   accelOffsetY = static_cast<float>(accelYTotal) / calibrationSamples;
   accelOffsetZ = (static_cast<float>(accelZTotal) / calibrationSamples) - 2048.0;
@@ -255,6 +257,7 @@ void onCommandReceived(const uint8_t *mac_addr, const uint8_t *data, int data_le
   memcpy(&incomingCmd, data, sizeof(incomingCmd));
   if (incomingCmd.ejectorCommand == true) {
     triggerEject = true;
+    timeDelay=millis();
   }
 }
 

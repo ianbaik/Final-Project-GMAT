@@ -456,7 +456,7 @@
                 },
                 "dataBitsIndex": 3,
                 "deviceId": {
-                    "description": "Silicon Labs CP210x USB to UART Bridge",
+                    "description": "CP2102 USB to UART Bridge Controller",
                     "pid": "EA60",
                     "portName": "COM3",
                     "serial": "0001",
@@ -528,6 +528,9 @@
         "GCS GMAT/Workspaces/Status Penerbangan": false
     },
     "widgetSettings": {
+        "11:0:1": {
+            "page": 1
+        },
         "activeGroup": 1001,
         "layout:1000": {
             "data": {
