@@ -90,7 +90,7 @@ void setup() {
 }
 
 void loop() {
-  // 1. Check for manual commands from Serial Studio (Fast & Non-Blocking)
+  // Check for manual commands from Serial Studio (Fast & Non-Blocking)
   static String rxBuffer = "";
   while (Serial.available() > 0) {
     char c = (char)Serial.read();
@@ -116,7 +116,7 @@ void loop() {
     }
   }
 
-  // 2. Process real telemetry data and forward to Serial Studio
+  //  Process real telemetry data and forward to Serial Studio
   if (newData) {
     // Run automatic state detection only if ejection has not been triggered yet
     if (!isEjectTriggered) {
@@ -125,7 +125,7 @@ void loop() {
         maxAltitude = dataRocket.altitude;
       }
 
-      // Step A: Detect Apogee (climbed > 5m, then dropped >= 2m OR descending < -1 m/s)
+      // Detect Apogee (climbed > 5m, then dropped >= 2m OR descending < -1 m/s)
       if (!apogeeDetected) {
         if ((maxAltitude > 5.0 && (maxAltitude - dataRocket.altitude) >= 2.0) || 
             (maxAltitude > 5.0 && dataRocket.velocityZ < -1.0)) {
@@ -136,7 +136,7 @@ void loop() {
           rocketState = FlightStanby;
         }
       } 
-      // Step B: Auto-trigger Ejection Charge 1.5 seconds (1500 ms) after Apogee
+      // Auto-trigger Ejection Charge 1.5 seconds (1500 ms) after Apogee
       else {
         if (millis() - apogeeTime >= 1500) {
           triggerEjection();
