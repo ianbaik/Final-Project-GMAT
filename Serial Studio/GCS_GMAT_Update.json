@@ -13,6 +13,20 @@
             "title": "EJECTION CHARGE",
             "txData": "eject\n",
             "txEncoding": 0
+        },
+        {
+            "autoExecuteOnConnect": false,
+            "binary": false,
+            "checksum": "",
+            "eol": "",
+            "icon": "refresh",
+            "repeatCount": 0,
+            "sourceId": 0,
+            "timerIntervalMs": 100,
+            "timerMode": 0,
+            "title": "RESET STATUS",
+            "txData": "reset\n",
+            "txEncoding": 0
         }
     ],
     "changeDrivenTransforms": false,
@@ -330,13 +344,47 @@
                     "fftWindow": 5,
                     "graph": false,
                     "groupId": 4,
-                    "index": 11,
-                    "ledHigh": 1,
+                    "index": 12,
+                    "ledHigh": 80,
                     "log": false,
                     "numericValue": 0,
                     "plotMax": 0,
                     "plotMin": 0,
-                    "title": "Status Ejection",
+                    "title": "Kondisi Roket (Flight State)",
+                    "uniqueId": 40004,
+                    "units": "",
+                    "value": "",
+                    "widget": "",
+                    "widgetMax": 0,
+                    "widgetMin": 0,
+                    "xAxis": -2
+                }
+            ],
+            "title": "Status Penerbangan",
+            "uniqueId": 40003,
+            "widget": "datagrid"
+        },
+        {
+            "datasets": [
+                {
+                    "datasetId": 0,
+                    "displayFormat": "0d",
+                    "displayTickCount": 5,
+                    "fft": false,
+                    "fftMax": 0,
+                    "fftMin": 0,
+                    "fftSamples": 256,
+                    "fftSamplingRate": 100,
+                    "fftWindow": 5,
+                    "graph": false,
+                    "groupId": 5,
+                    "index": 11,
+                    "ledHigh": 2,
+                    "log": false,
+                    "numericValue": 0,
+                    "plotMax": 0,
+                    "plotMin": 0,
+                    "title": "Ejection Charge Aktif",
                     "uniqueId": 40002,
                     "units": "",
                     "value": "",
@@ -389,7 +437,7 @@
         "sslProtocol": 5,
         "topicBase": ""
     },
-    "nextUniqueId": 40003,
+    "nextUniqueId": 40005,
     "plotTimeRange": 10,
     "pointCount": 100,
     "schemaVersion": 3,
@@ -408,7 +456,7 @@
                 },
                 "dataBitsIndex": 3,
                 "deviceId": {
-                    "description": "CP2102 USB to UART Bridge Controller",
+                    "description": "Silicon Labs CP210x USB to UART Bridge",
                     "pid": "EA60",
                     "portName": "COM3",
                     "serial": "0001",
@@ -425,7 +473,7 @@
             "decoderMethod": 0,
             "frameDetection": 0,
             "frameEnd": "*/",
-            "frameParserCode": "function parse(frame) {\n  return frame.split(',');\n}\n",
+            "frameParserCode": "function parse(frame) {\n  var parts = frame.split(',');\n  var stateCode = parseInt(parts[10]);\n  var stateText = \"FLIGHT / STANDBY\";\n  if (stateCode === 1) stateText = \"APOGEE\";\n  else if (stateCode === 2) stateText = \"EJECTION CHARGE\";\n  parts.push(stateText);\n  return parts;\n}\n",
             "frameStart": "/*",
             "hexadecimalDelimiters": false,
             "sourceId": 0,
@@ -455,7 +503,9 @@
         "GCS GMAT/Dashboard Widgets/Orientasi (MPU6050)/Roll": false,
         "GCS GMAT/Dashboard Widgets/Orientasi (MPU6050)/Yaw": false,
         "GCS GMAT/Dashboard Widgets/Sistem Aktuator LEDs": true,
-        "GCS GMAT/Dashboard Widgets/Sistem Aktuator LEDs/Status Ejection": false,
+        "GCS GMAT/Dashboard Widgets/Sistem Aktuator LEDs/Ejection Charge Aktif": false,
+        "GCS GMAT/Dashboard Widgets/Status Penerbangan": true,
+        "GCS GMAT/Dashboard Widgets/Status Penerbangan/Kondisi Roket (Flight State)": false,
         "GCS GMAT/Data Export": true,
         "GCS GMAT/Data Export/InfluxDB Sink": false,
         "GCS GMAT/Data Export/MQTT Publisher": false,
@@ -464,6 +514,7 @@
         "GCS GMAT/Project Scripts/Control Loop": false,
         "GCS GMAT/Project Scripts/JavaScript Library": false,
         "GCS GMAT/Project Scripts/Lua Library": false,
+        "GCS GMAT/RESET STATUS": false,
         "GCS GMAT/Variables": true,
         "GCS GMAT/Variables/Dataset Values": false,
         "GCS GMAT/Workspaces": true,
@@ -473,21 +524,10 @@
         "GCS GMAT/Workspaces/Lingkungan (BMP280)": false,
         "GCS GMAT/Workspaces/Orientasi (MPU6050)": false,
         "GCS GMAT/Workspaces/Overview": false,
-        "GCS GMAT/Workspaces/Sistem Aktuator LEDs": false
+        "GCS GMAT/Workspaces/Sistem Aktuator LEDs": false,
+        "GCS GMAT/Workspaces/Status Penerbangan": false
     },
     "widgetSettings": {
-        "10:0:2": {
-            "page": 1
-        },
-        "10:0:3": {
-            "page": 1
-        },
-        "11:0:1": {
-            "page": 1
-        },
-        "11:2:7": {
-            "page": 1
-        },
         "activeGroup": 1001,
         "layout:1000": {
             "data": {
@@ -496,8 +536,8 @@
                 "canvasWidth": 1923,
                 "geometries": [
                     {
-                        "height": 869,
-                        "id": 3,
+                        "height": 435,
+                        "id": 4,
                         "relativeIndex": 0,
                         "state": "normal",
                         "widgetType": 4,
@@ -507,7 +547,7 @@
                     },
                     {
                         "height": 435,
-                        "id": 2,
+                        "id": 3,
                         "relativeIndex": 1,
                         "state": "normal",
                         "widgetType": 2,
@@ -517,7 +557,17 @@
                     },
                     {
                         "height": 434,
-                        "id": 4,
+                        "id": 1,
+                        "relativeIndex": 0,
+                        "state": "normal",
+                        "widgetType": 1,
+                        "width": 962,
+                        "x": 0,
+                        "y": 434
+                    },
+                    {
+                        "height": 434,
+                        "id": 5,
                         "relativeIndex": 0,
                         "state": "normal",
                         "widgetType": 8,
@@ -528,9 +578,10 @@
                 ],
                 "userReordered": false,
                 "windowOrder": [
+                    4,
                     3,
-                    2,
-                    4
+                    1,
+                    5
                 ],
                 "windowOrderTyped": [
                     {
@@ -540,6 +591,10 @@
                     {
                         "relativeIndex": 1,
                         "widgetType": 2
+                    },
+                    {
+                        "relativeIndex": 0,
+                        "widgetType": 1
                     },
                     {
                         "relativeIndex": 0,
