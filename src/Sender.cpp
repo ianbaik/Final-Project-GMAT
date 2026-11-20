@@ -177,7 +177,7 @@ void loop() {
   if (triggerEject) {
     Serial.println("Ejector Active! Firing for 2 seconds...");
     digitalWrite(ejectPin, HIGH);
-     if(millis()-timeDelay>50000){
+     if(millis()-timeDelay>20000){
        digitalWrite(ejectPin, LOW);
        Serial.println("Ejector OFF");
        triggerEject = false;
