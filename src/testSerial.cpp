@@ -27,25 +27,49 @@ typedef struct {
 Command_message incomingCmd;
 esp_now_peer_info_t peerInfo;
 
-bool newData=false; // Flag to indicate if new data has been received
+bool newData = false; // Flag to indicate if new data has been received
 
-//fungction to handle incoming data
+// --- TAMBAHAN: Variabel Lampu LED ---
+int statusEjection = 0; // 0 = Mati, 1 = Menyala
+
+// function to handle incoming data
 void onDataReceived(const uint8_t *mac_addr, const uint8_t *data, int data_len) {
-    mempcpy(&dataRocket, data, sizeof(dataRocket)); // Copy the received data into the Struct_message struct
-    newData = true; // Set the flag to indicate new data has been received
+    // --- PERBAIKAN: Typo mempcpy menjadi memcpy ---
+    memcpy(&dataRocket, data, sizeof(dataRocket)); 
+    newData = true; 
 }
 
 void setup(){
     Serial.begin(115200);
-    Serial.println("Receiver Aktif");
+    Serial.println("Receiver Dummy Aktif...");
+
+    // --- TAMBAHAN: Setup ESP-NOW agar tombol Eject tidak error ---
+    WiFi.mode(WIFI_STA);
+
+    if (esp_now_init() != ESP_OK) {
+        Serial.println("Error initializing ESP-NOW");
+        return;
+    }
+
+    esp_now_register_recv_cb(onDataReceived);
+
+    // Add the sender as a peer
+    memcpy(peerInfo.peer_addr, senderAddress, 6);
+    peerInfo.channel = 0;  
+    peerInfo.encrypt = false;
+
+    if (esp_now_add_peer(&peerInfo) != ESP_OK){
+        Serial.println("Failed to add peer");
+        return;
+    }
 }
 
 void loop(){
-    // --- MULAI BLOK SIMULASI DATA ---
+  // --- MULAI BLOK SIMULASI DATA ---
   static unsigned long lastSimTime = 0;
   if (millis() - lastSimTime > 200) { 
     dataRocket.altitude = random(0, 1000); 
-    dataRocket.temperature = random(250, 350) / 10.0; 
+    dataRocket.temperature = random(250, 500) / 10.0; 
     dataRocket.pressure = 1.0; 
     dataRocket.orientationRoll = random(-180, 180);
     dataRocket.orientationPitch = random(-180, 180);
@@ -72,7 +96,11 @@ void loop(){
     Serial.print(dataRocket.velocityZ, 2); Serial.print(",");
     Serial.print(dataRocket.gyroX, 2); Serial.print(",");
     Serial.print(dataRocket.gyroY, 2); Serial.print(",");
-    Serial.print(dataRocket.gyroZ, 2);
+    Serial.print(dataRocket.gyroZ, 2); Serial.print(","); // Tambahan koma
+    
+    // --- TAMBAHAN: Print Data ke-11 ---
+    Serial.print(statusEjection); 
+    
     Serial.print("*/");
     Serial.println();
 
@@ -86,6 +114,9 @@ void loop(){
     if(command.equalsIgnoreCase("eject")) {
       incomingCmd.ejectorCommand = true;
       esp_now_send(senderAddress, (uint8_t *)&incomingCmd, sizeof(incomingCmd));
+      
+      // --- TAMBAHAN: Nyalakan lampu LED di Serial Studio ---
+      statusEjection = 1; 
     }
   }
 }

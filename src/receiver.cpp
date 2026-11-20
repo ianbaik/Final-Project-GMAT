@@ -79,7 +79,7 @@ void loop() {
     Serial.print(dataRocket.gyroX, 2); Serial.print(",");
     Serial.print(dataRocket.gyroY, 2); Serial.print(",");
     Serial.print(dataRocket.gyroZ, 2);
-    Serial.print(statusEjection);
+    Serial.print(statusEjection)
     Serial.print("*/");
     Serial.println();
 
