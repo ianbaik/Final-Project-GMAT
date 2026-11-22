@@ -42,7 +42,7 @@ float orientationRoll = 0.0, orientationPitch = 0.0, orientationYaw = 0.0;
 float altitude = 0.0, pressure = 0.0, temperature = 0.0;
 float baseAltitude = 0.0;
 
-// Calibration offset variables (Fixed typo on accelOffsetZ)
+// Calibration offset variables 
 float gyroOffsetX = 0, gyroOffsetY = 0, gyroOffsetZ = 0;
 float accelOffsetX = 0, accelOffsetY = 0, accelOffsetZ = 0;
 
